@@ -115,5 +115,5 @@ Advanced predictive analytics
 ## 👨‍💻 Author
 
 Aditya Narayan Panda
-B.Tech – Computer Science & Engineering
-Focus: Data Analytics | SQL | Python | Power BI | Business Intelligence
+ B.Tech – Computer Science & Engineering
+ Focus: Data Analytics | SQL | Python | Power BI | Business Intelligence
