@@ -511,5 +511,53 @@ FROM (
 WHERE rnk <= 3
 ORDER BY region, total_sales DESC;
 -- Profit Contribution (%) by Category 
+SELECT
+    category,
+    ROUND(SUM(profit),2) AS total_profit,
+    ROUND(
+        SUM(profit) * 100 /
+        (SELECT SUM(profit) FROM superstore),
+        2
+    ) AS contribution_percent
+FROM superstore
+GROUP BY category
+ORDER BY contribution_percent DESC;
 -- Running Profit by Month
+WITH monthly_profit AS (
+    SELECT
+        YEAR(order_date) AS order_year,
+        MONTH(order_date) AS order_month,
+        SUM(profit) AS monthly_profit
+    FROM superstore
+    GROUP BY YEAR(order_date), MONTH(order_date)
+)
+
+SELECT
+    *,
+    ROUND(
+        SUM(monthly_profit) OVER(
+            ORDER BY order_year, order_month
+        ),
+        2
+    ) AS running_profit
+FROM monthly_profit;
 -- 3-Month Moving Average of Sales
+WITH monthly_sales AS (
+    SELECT
+        YEAR(order_date) AS order_year,
+        MONTH(order_date) AS order_month,
+        SUM(sales) AS monthly_sales
+    FROM superstore
+    GROUP BY YEAR(order_date), MONTH(order_date)
+)
+
+SELECT
+    *,
+    ROUND(
+        AVG(monthly_sales) OVER(
+            ORDER BY order_year, order_month
+            ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+        ),
+        2
+    ) AS moving_avg_3_month
+FROM monthly_sales;
